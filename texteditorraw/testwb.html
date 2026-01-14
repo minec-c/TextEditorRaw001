@@ -4,6 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Emscripten-Generated Code</title>
+<textarea
+  class="emscripten"
+  id="output"
+  rows="14"
+  style="width:95%; font-size:12px;"
+></textarea>
+
     <style>
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       textarea.emscripten { font-family: monospace; width: 80%; }
@@ -76,26 +83,16 @@
       var Module = {
         preRun: [],
         postRun: [],
-        print: (function() {
-          var element = document.getElementById('output');
-          if (element) element.value = ''; // clear browser cache
-          return function(text) {
-            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-            // These replacements are necessary if you render to raw HTML
-            //text = text.replace(/&/g, "&amp;");
-            //text = text.replace(/</g, "&lt;");
-            //text = text.replace(/>/g, "&gt;");
-            //text = text.replace('\n', '<br>', 'g');
-            console.log(text);
-            if (element) {
-              element.value += text + "\n";
-              element.scrollTop = element.scrollHeight; // focus on bottom
-            }
-          };
-        })(),
+        print: function(text) {
+          if (arguments.length > 1)
+            text = Array.prototype.slice.call(arguments).join(' ');
+        pageLog("[OUT] ", text);
+        },
+
         printErr: function(text) {
-          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-          console.error(text);
+          if (arguments.length > 1)
+             text = Array.prototype.slice.call(arguments).join(' ');
+        pageLog("[ERR] ", text);
         },
         canvas: (function() {
           var canvas = document.getElementById('canvas');
@@ -135,6 +132,27 @@
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       };
+
+
+  window.onerror = function (msg, url, line, col, error) {
+    var text =
+      msg +
+      " @ " +
+      url +
+      ":" +
+      line +
+      ":" +
+      col;
+    Module.printErr("JS Exception: " + text);
+    return true; // prevent browser default
+  };
+
+  window.addEventListener("unhandledrejection", function (e) {
+    Module.printErr("Promise rejection: " + e.reason);
+  });
+
+
+
       Module.setStatus('Downloading...');
       window.onerror = function() {
         Module.setStatus('Exception thrown, see JavaScript console');
