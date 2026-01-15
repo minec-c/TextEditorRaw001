@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>Emscripten-Generated Code</title>
+
+  <style>
+    .emscripten { margin: auto; display: block; }
+    textarea.emscripten {
+      font-family: monospace;
+      width: 95%;
+      font-size: 12px;
+    }
+    canvas.emscripten {
+      border: 0;
+      background-color: black;
+    }
+  </style>
+</head>
+
+<body>
+
+<hr>
+
+<!-- DEBUG CONSOLE -->
+<textarea class="emscripten" id="output" rows="14"></textarea>
+
+<hr>
+
+<div id="status" class="emscripten">Downloading...</div>
+
+<div class="emscripten_border">
+  <canvas class="emscripten" id="canvas"
+    oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+</div>
+
+<hr>
+
+<script type="text/javascript">
+  function pageLog(prefix, text) {
+    var el = document.getElementById("output");
+    if (!el) return;
+    el.value += prefix + text + "\n";
+    el.scrollTop = el.scrollHeight;
+  }
+
+  var Module = {
+    preRun: [],
+    postRun: [],
+
+    print: function (text) {
+      if (arguments.length > 1)
+        text = Array.prototype.slice.call(arguments).join(" ");
+      pageLog("[OUT] ", text);
+    },
+
+    printErr: function (text) {
+      if (arguments.length > 1)
+        text = Array.prototype.slice.call(arguments).join(" ");
+      pageLog("[ERR] ", text);
+    },
+
+    canvas: (function () {
+      var canvas = document.getElementById("canvas");
+      return canvas;
+    })(),
+
+    setStatus: function (text) {
+      document.getElementById("status").innerHTML = text;
+      pageLog("[STATUS] ", text);
+    }
+  };
+
+  window.onerror = function (msg, url, line, col) {
+    Module.printErr(msg + " @ " + line + ":" + col);
+    return true;
+  };
+
+  window.addEventListener("unhandledrejection", function (e) {
+    Module.printErr("Promise rejection: " + e.reason);
+  });
+</script>
+
+<script async src="testwb9.js"></script>
+
+</body>
+</html>
