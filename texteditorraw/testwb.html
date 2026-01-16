@@ -15,20 +15,6 @@
       border: 0;
       background-color: black;
     }
-    <input
-     id="sdl-input"
-     type="text"
-     autocomplete="off"
-     autocorrect="off"
-     autocapitalize="off"
-     spellcheck="false"
-     sytle="
-      position:absolute;
-      opacity:0;
-      left:-1000px;
-      top:-1000px;
-     "
-    >
   </style>
 </head>
 
@@ -48,19 +34,41 @@
     oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 </div>
 
+<!-- ✅ HIDDEN INPUT (MUST BE IN BODY) -->
+<input
+  id="sdl-input"
+  type="text"
+  autocomplete="off"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+  style="
+    position:absolute;
+    opacity:0;
+    left:-1000px;
+    top:-1000px;
+  "
+>
+
 <hr>
 
 <script type="text/javascript">
+(function () {
   var input = document.getElementById("sdl-input");
   var canvas = document.getElementById("canvas");
 
-  canvas.addEventListener("touchstart",function(){
+  if (!input || !canvas) {
+    console.error("SDL input or canvas not found");
+    return;
+  }
+
+  function focusInput() {
     input.focus();
-  });
-  canvas.addEventListener("mousedown",function(){
-    input.focus();
-  });
-  
+  }
+
+  canvas.addEventListener("touchstart", focusInput);
+  canvas.addEventListener("mousedown", focusInput);
+
   function pageLog(prefix, text) {
     var el = document.getElementById("output");
     if (!el) return;
@@ -68,27 +76,16 @@
     el.scrollTop = el.scrollHeight;
   }
 
-  var Module = {
+  window.Module = {
     preRun: [],
     postRun: [],
-
     print: function (text) {
-      if (arguments.length > 1)
-        text = Array.prototype.slice.call(arguments).join(" ");
       pageLog("[OUT] ", text);
     },
-
     printErr: function (text) {
-      if (arguments.length > 1)
-        text = Array.prototype.slice.call(arguments).join(" ");
       pageLog("[ERR] ", text);
     },
-
-    canvas: (function () {
-      var canvas = document.getElementById("canvas");
-      return canvas;
-    })(),
-
+    canvas: canvas,
     setStatus: function (text) {
       document.getElementById("status").innerHTML = text;
       pageLog("[STATUS] ", text);
@@ -100,14 +97,10 @@
     return true;
   };
 
-  window.addEventListener("unhandledrejection", function (e) {
-    Module.printErr("Promise rejection: " + e.reason);
-  });
+})();
 </script>
 
 <script async src="testwb9.js"></script>
 
 </body>
-
 </html>
-
