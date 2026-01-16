@@ -15,6 +15,20 @@
       border: 0;
       background-color: black;
     }
+    <input
+     id="sdl-input"
+     type="text"
+     autocomplete="off"
+     autocorrect="off"
+     autocapitalize="off"
+     spellcheck="false"
+     sytle="
+      position:absolute;
+      opacity:0;
+      left:-1000px;
+      top:-1000px;
+     "
+    >
   </style>
 </head>
 
@@ -37,6 +51,16 @@
 <hr>
 
 <script type="text/javascript">
+  var input = document.getElementById("sdl-input");
+  var canvas = document.getElementById("canvas");
+
+  canvas.addEventListener("touchstart",function(){
+    input.focus();
+  });
+  canvas.addEventListener("mousedown",function(){
+    input.focus();
+  });
+  
   function pageLog(prefix, text) {
     var el = document.getElementById("output");
     if (!el) return;
@@ -86,3 +110,4 @@
 </body>
 
 </html>
+
