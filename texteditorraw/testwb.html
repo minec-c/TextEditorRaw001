@@ -97,6 +97,21 @@
     return true;
   };
 
+  input.addEventListener("input", function () {
+    var value = input.value;
+    if (value.length > 0) {
+      for (var i = 0; i < value.length; i++) {
+        Module.ccall(
+          "on_text_input",
+          null,
+          ["string"],
+          [value[i]]
+        );
+      }
+      input.value = ""; // clear after sending
+    }
+
+  
 })();
 </script>
 
@@ -104,3 +119,4 @@
 
 </body>
 </html>
+
