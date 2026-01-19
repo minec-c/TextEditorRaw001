@@ -97,6 +97,7 @@
     return true;
   };
 
+  // ✅ CORRECT input forwarding
   input.addEventListener("input", function () {
     var value = input.value;
     if (value.length > 0) {
@@ -108,15 +109,16 @@
           [value[i]]
         );
       }
-      input.value = ""; // clear after sending
+      input.value = "";
     }
+  });
 
-  
-})();
+})(); // ✅ IIFE closes HERE
 </script>
 
 <script async src="testwb9.js"></script>
 
 </body>
 </html>
+
 
