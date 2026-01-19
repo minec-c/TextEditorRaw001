@@ -2,39 +2,64 @@
 <html lang="en-us">
 <head>
   <meta charset="utf-8">
-  <title>TextEditorRaw</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Emscripten-Generated Code</title>
 
   <style>
-    .texteditorraw { margin: auto; display: block; }
-    textarea.texteditorraw {
-      font-family: monospace;
-      width: 95%;
-      font-size: 12px;
+    .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+    textarea.emscripten { font-family: monospace; width: 95%; }
+    div.emscripten { text-align: center; }
+    div.emscripten_border { border: 1px solid black; }
+    canvas.emscripten { border: 0; background-color: black; }
+
+    .spinner {
+      height: 50px;
+      width: 50px;
+      margin: 0 auto;
+      animation: rotation .8s linear infinite;
+      border-left: 10px solid rgb(0,150,240);
+      border-right: 10px solid rgb(0,150,240);
+      border-bottom: 10px solid rgb(0,150,240);
+      border-top: 10px solid rgb(100,0,200);
+      border-radius: 100%;
     }
-    canvas.texteditorraw {
-      border: 0;
-      background-color: black;
+
+    @keyframes rotation {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
   </style>
 </head>
 
 <body>
 
-<hr>
+<hr/>
 
-<!-- DEBUG CONSOLE -->
-<textarea class="texteditorraw" id="output" rows="14"></textarea>
+<figure id="spinner" style="overflow:visible;">
+  <div class="spinner"></div>
+  <center style="margin-top:0.5em"><strong>emscripten</strong></center>
+</figure>
 
-<hr>
+<div class="emscripten" id="status">Downloading...</div>
 
-<div id="status" class="texteditorraw">Downloading...</div>
-
-<div class="texteditorraw_border">
-  <canvas class="texteditorraw" id="canvas"
-    oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+<div class="emscripten">
+  <progress value="0" max="100" id="progress" hidden></progress>
 </div>
 
-<!-- ✅ HIDDEN INPUT (MUST BE IN BODY) -->
+<div class="emscripten_border">
+  <canvas
+    class="emscripten"
+    id="canvas"
+    oncontextmenu="event.preventDefault()"
+    tabindex="-1">
+  </canvas>
+</div>
+
+<hr/>
+
+<textarea class="emscripten" id="output" rows="8"></textarea>
+
+<!-- ✅ HIDDEN INPUT FOR MOBILE TEXT -->
 <input
   id="sdl-input"
   type="text"
@@ -50,31 +75,43 @@
   "
 >
 
-<hr>
+<hr/>
 
 <script type="text/javascript">
 (function () {
-  var input = document.getElementById("sdl-input");
-  var canvas = document.getElementById("canvas");
 
-  if (!input || !canvas) {
-    console.error("SDL input or canvas not found");
-    return;
+  var canvas = document.getElementById("canvas");
+  var input  = document.getElementById("sdl-input");
+  var output = document.getElementById("output");
+  var status = document.getElementById("status");
+  var progress = document.getElementById("progress");
+  var spinner = document.getElementById("spinner");
+
+  function pageLog(prefix, text) {
+    if (!output) return;
+    output.value += prefix + text + "\n";
+    output.scrollTop = output.scrollHeight;
   }
 
   function focusInput() {
-    input.focus();
+    if (input) input.focus();
   }
 
   canvas.addEventListener("touchstart", focusInput);
   canvas.addEventListener("mousedown", focusInput);
 
-  function pageLog(prefix, text) {
-    var el = document.getElementById("output");
-    if (!el) return;
-    el.value += prefix + text + "\n";
-    el.scrollTop = el.scrollHeight;
-  }
+  input.addEventListener("input", function () {
+    var value = input.value;
+    if (value.length > 0 && window.Module && Module.ccall) {
+      Module.ccall(
+        "on_text_input",
+        null,
+        ["string"],
+        [value]
+      );
+      input.value = "";
+    }
+  });
 
   window.Module = {
     preRun: [],
@@ -87,8 +124,14 @@
     },
     canvas: canvas,
     setStatus: function (text) {
-      document.getElementById("status").innerHTML = text;
+      status.innerHTML = text;
       pageLog("[STATUS] ", text);
+    },
+    monitorRunDependencies: function (left) {
+      if (left === 0) {
+        progress.hidden = true;
+        spinner.hidden = true;
+      }
     }
   };
 
@@ -97,28 +140,10 @@
     return true;
   };
 
-  // ✅ CORRECT input forwarding
-  input.addEventListener("input", function () {
-    var value = input.value;
-    if (value.length > 0) {
-      for (var i = 0; i < value.length; i++) {
-        Module.ccall(
-          "on_text_input",
-          null,
-          ["string"],
-          [value[i]]
-        );
-      }
-      input.value = "";
-    }
-  });
-
-})(); // ✅ IIFE closes HERE
+})();
 </script>
 
 <script async src="testwb9.js"></script>
 
 </body>
 </html>
-
-
