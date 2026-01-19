@@ -95,6 +95,11 @@
         })(),
         printErr: function(text) {
           if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          var element = document.getElementById('output');
+          if (element){
+              element.value += '[ERR] '+text+"\n";
+              element.scrollTop = element.scrollHeight;
+          }
           console.error(text);
         },
         canvas: (function() {
@@ -136,12 +141,21 @@
         }
       };
       Module.setStatus('Downloading...');
-      window.onerror = function() {
-        Module.setStatus('Exception thrown, see JavaScript console');
-        spinnerElement.style.display = 'none';
-        Module.setStatus = function(text) {
-          if (text) Module.printErr('[post-exception status] ' + text);
-        };
+     // window.onerror = function() {
+     //   Module.setStatus('Exception thrown, see JavaScript console');
+     //   spinnerElement.style.display = 'none';
+     //   Module.setStatus = function(text) {
+     //     if (text) Module.printErr('[post-exception status] ' + text);
+     //   };
+     window.onerror = funcion(msg,url,line,col){
+       Module.setStatus('Exception thrwon, see JS console');
+       spinnerElement.style.display = 'none';
+       var element = document.getElementById('output');
+       if (element){
+         element.value += '[ERR]'+msg+"@"+line+":"+col+"\n";
+         element.scrollTop = element.scrollHeight;
+       }
+       console.error(msg);
       };
     </script>
     <script async type="text/javascript" src="testwb11.js"></script>
