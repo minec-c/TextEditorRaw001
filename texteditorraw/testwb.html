@@ -56,6 +56,14 @@
     <div class="emscripten_border">
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
     </div>
+
+
+<input id="textInput"
+       type="text"
+       style="width:90%; font-size:18px;"
+       placeholder="Type here (Android)">
+
+
     <hr/>
     <div class="emscripten">
       <input type="checkbox" id="resize">Resize canvas
@@ -140,6 +148,16 @@
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       };
+
+document.getElementById("textInput").addEventListener("input", function(e) {
+  Module.ccall(
+    'set_text',
+    null,
+    ['string'],
+    [e.target.value]
+  );
+});
+
       Module.setStatus('Downloading...');
      // window.onerror = function() {
      //   Module.setStatus('Exception thrown, see JavaScript console');
@@ -158,9 +176,8 @@
        console.error(msg);
       };
     </script>
-    <script async type="text/javascript" src="testwb11.js"></script>
+    <script async type="text/javascript" src="testwb12.js"></script>
   </body>
 </html>
-
 
 
