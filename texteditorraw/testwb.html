@@ -96,12 +96,12 @@
       const input = document.getElementById("textInput");
 
 
-      //VERY IMPORTANT: stop propagation to canvas
-      ["keydown","keyup","keypress","beforeinput","input"].forEach(evt=>{
-         input.addEventListener(evt,e=>{
-           e.stopPropagation();
-         },true); //<- capture phase
-      });
+//      //VERY IMPORTANT: stop propagation to canvas
+//      ["keydown","keyup","keypress","beforeinput","input"].forEach(evt=>{
+//         input.addEventListener(evt,e=>{
+//           e.stopPropagation();
+//         },true); //<- capture phase
+//      });
 
       function sendText(){
         if (Module && Module.ccall){
@@ -236,6 +236,7 @@ document.getElementById("textInput").addEventListener("input", function(e) {
     <script async type="text/javascript" src="testwb13.js"></script>
   </body>
 </html>
+
 
 
 
