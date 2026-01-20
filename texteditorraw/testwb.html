@@ -147,7 +147,7 @@
      //   Module.setStatus = function(text) {
      //     if (text) Module.printErr('[post-exception status] ' + text);
      //   };
-     window.onerror = funcion(msg,url,line,col){
+     window.onerror = function(msg,url,line,col){
        Module.setStatus('Exception thrwon, see JS console');
        spinnerElement.style.display = 'none';
        var element = document.getElementById('output');
@@ -161,5 +161,6 @@
     <script async type="text/javascript" src="testwb11.js"></script>
   </body>
 </html>
+
 
 
