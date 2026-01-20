@@ -58,24 +58,13 @@
 
 <input id="textInput"
        type="text"
-        inputmode="text"
-       autocomplete="off"
-       autocorrect="off"
-       autocapitalize="off"
-       spellcheck="false"
        style="width:90%; font-size:18px;"
        placeholder="Type here (Android)">
 
 
+
+
     </div>
-
-
-
-
-
-
-
-
     <hr/>
     <div class="emscripten">
       <input type="checkbox" id="resize">Resize canvas
@@ -93,37 +82,6 @@
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
 
-      const input = document.getElementById("textInput");
-
-
-//      //VERY IMPORTANT: stop propagation to canvas
-//      ["keydown","keyup","keypress","beforeinput","input"].forEach(evt=>{
-//         input.addEventListener(evt,e=>{
-//           e.stopPropagation();
-//         },true); //<- capture phase
-//      });
-
-      function sendText(){
-        if (Module && Module.ccall){
-          Module.ccall(
-            'set_text',
-            null,
-            ['string'],
-            [input.value]
-            );
-        }
-      }
-
-
-      input.addEventListener("input",sendText);   //Normal typing
-      //Android IME delete safety
-      input.addEventListener("keydown",e=>{
-        if(e.key==="Backspace"||e.keyCode===229){
-          setTimeout(sendText,0);
-        }
-      });
-
-      
       var Module = {
         preRun: [],
         postRun: [],
@@ -156,7 +114,6 @@
           }
           console.error(text);
         },
-
 
 
 
@@ -198,9 +155,6 @@
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       };
-
-
-
 document.getElementById("textInput").addEventListener("input", function(e) {
   Module.ccall(
     'set_text',
@@ -209,6 +163,8 @@ document.getElementById("textInput").addEventListener("input", function(e) {
     [e.target.value]
   );
 });
+
+
 
       Module.setStatus('Downloading...');
      // window.onerror = function() {
@@ -227,19 +183,9 @@ document.getElementById("textInput").addEventListener("input", function(e) {
        }
        console.error(msg);
       };
-
-
-
-
-      
     </script>
-    <script async type="text/javascript" src="testwb13.js"></script>
+    <script async type="text/javascript" src="testwb15.js"></script>
   </body>
 </html>
-
-
-
-
-
 
 
