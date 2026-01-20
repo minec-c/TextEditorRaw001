@@ -88,6 +88,37 @@
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
 
+      const input = document.getElementById("textInput");
+
+
+      //VERY IMPORTANT: stop propagation to canvas
+      ["keydown","keyup","keypress","beforeinput","input"].forEach(evt=>{
+         input.addEventListener(evt,e=>{
+           e.stopPropagation();
+         },true); //<- capture phase
+      });
+
+      function sendText(){
+        if (Module && Module.ccall){
+          Module.ccall(
+            'set_text',
+            null,
+            ['string'],
+            [input.value]
+            );
+        }
+      }
+
+
+      input.addEventListener("input",sendText);   //Normal typing
+      //Android IME delete safety
+      input.addEventListener("keydown",e=>{
+        if(e.key==="Backspace"||e.keyCode===229){
+          setTimeout(sendText,0);
+        }
+      });
+
+      
       var Module = {
         preRun: [],
         postRun: [],
@@ -165,14 +196,14 @@
 
 
 
-document.getElementById("textInput").addEventListener("input", function(e) {
-  Module.ccall(
-    'set_text',
-    null,
-    ['string'],
-    [e.target.value]
-  );
-});
+//document.getElementById("textInput").addEventListener("input", function(e) {
+//  Module.ccall(
+//    'set_text',
+//    null,
+//    ['string'],
+//    [e.target.value]
+//  );
+//});
 
       Module.setStatus('Downloading...');
      // window.onerror = function() {
@@ -191,9 +222,15 @@ document.getElementById("textInput").addEventListener("input", function(e) {
        }
        console.error(msg);
       };
+
+
+
+
+      
     </script>
     <script async type="text/javascript" src="testwb13.js"></script>
   </body>
 </html>
+
 
 
