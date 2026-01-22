@@ -35,6 +35,11 @@
     <textarea class="emscripten" id="output" rows="8"></textarea>
     <hr>
     <script type='text/javascript'>
+      const input = document.getElementById("textInput");
+      input.focus();
+      document.getEelemntById("canvas"):addEventListener("mousedown", () => {
+        input.focus();
+      });
       var Module = {
         preRun: [],
         postRun: [],
@@ -78,7 +83,7 @@
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
-      };
+      }; //var Module
 document.getElementById("textInput").addEventListener("input", function(e) {
   Module.ccall(
     'set_text',
@@ -97,9 +102,13 @@ document.getElementById("textInput").addEventListener("input", function(e) {
        }
        console.error(msg);
       };
+      Module.keyboardListeningElement = document.getElementById("textInput");
+      //Explicitly disabling library's keyboard capture on web:
+      //Module.keyboardListeningElement = null; 
     </script>
     <script async type="text/javascript" src="testwb16.js"></script>
   </body>
 </html>
+
 
 
