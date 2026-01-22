@@ -37,12 +37,16 @@
     <script type='text/javascript'>
       const input = document.getElementById("textInput");
       input.focus();
+      window.addEventListener("load", () => {
+        input.focus();
+      });
       document.getElementById("canvas").addEventListener("mousedown", () => {
         input.focus();
       });
       var Module = {
         preRun: [],
         postRun: [],
+        keyboardListeningElement: document.getElementById("textInput"),
         print: (function() {
           var element = document.getElementById('output');
           if (element) element.value = ''; // clear browser cache
@@ -84,13 +88,9 @@
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       }; //var Module
-document.getElementById("textInput").addEventListener("input", function(e) {
-  Module.ccall(
-    'set_text',
-    null,
-    ['string'],
-    [e.target.value]
-  );
+//document.getElementById("textInput").addEventListener("input", function(e) {
+input.addEventListener("input", function(e){
+  Module.ccall('set_text', null, ['string'], [e.target.value]);
 });
       Module.setStatus('Downloading...');
      window.onerror = function(msg,url,line,col){
@@ -102,13 +102,14 @@ document.getElementById("textInput").addEventListener("input", function(e) {
        }
        console.error(msg);
       };
-      Module.keyboardListeningElement = document.getElementById("textInput");
+      //Module.keyboardListeningElement = document.getElementById("textInput");
       //Explicitly disabling library's keyboard capture on web:
       //Module.keyboardListeningElement = null; 
     </script>
     <script async type="text/javascript" src="testwb16.js"></script>
   </body>
 </html>
+
 
 
 
