@@ -76,7 +76,8 @@
               element.scrollTop = element.scrollHeight;
           }
           if (typeof console !== "undefined" && console.error) {
-          console.error(text);
+              console.error(text);
+          }
         },
         setStatus: function(text) {
           if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
@@ -129,6 +130,7 @@ input.addEventListener("input", () => {
     <script async type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
