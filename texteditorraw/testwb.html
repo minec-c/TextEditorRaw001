@@ -31,9 +31,6 @@
       style="width:90%; font-size:18px;"
       placeholder="Type here (Android)">
     </div>
-
-
-    </div>
     <hr/>
     <div class="emscripten">
     </div>
@@ -41,91 +38,52 @@
     <hr/>
     <textarea class="emscripten" id="output" rows="8"></textarea>
     <hr>
-    <script type='text/javascript'>
+<script>
+const input = document.getElementById("textInput");
+const output = document.getElementById("output");
 
-      const input = document.getElementById("textInput");
-      input.focus();
-      window.addEventListener("load", () => {
-        input.focus();
-      });
-      document.getElementById("canvas").addEventListener("mousedown", () => {
-        input.focus();
-      });
+window.addEventListener("load", () => input.focus());
+document.getElementById("canvas").addEventListener("mousedown", () => input.focus());
 
-
-      var Module = {
-        preRun: [],
-        postRun: [],
-        print: (function() {
-          var element = document.getElementById('output');
-          if (element) element.value = ''; // clear browser cache
-          return function(text) {
-            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-            console.log(text);
-            if (element) {
-              element.value += text + "\n";
-              element.scrollTop = element.scrollHeight; // focus on bottom
-            }
-          };
-        })(),
-        printErr: function(text) {
-          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-          var element = document.getElementById('output');
-          if (element){
-              element.value += '[ERR] '+text+"\n";
-              element.scrollTop = element.scrollHeight;
-          }
-          console.error(text);
-        },
-        setStatus: function(text) {
-          if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
-          if (text === Module.setStatus.last.text) return;
-          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
-          var now = Date.now();
-          if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
-          Module.setStatus.last.time = now;
-          Module.setStatus.last.text = text;
-          statusElement.innerHTML = text;
-        },
-        totalDependencies: 0,
-        monitorRunDependencies: function(left) {
-          this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
-        }
-      }; //var Module
-
-
+var Module = {
+  print: function(text) {
+    if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+    console.log(text);
+    output.value += text + "\n";
+    output.scrollTop = output.scrollHeight;
+  },
+  printErr: function(text) {
+    if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+    console.error(text);
+    output.value += "[ERR] " + text + "\n";
+    output.scrollTop = output.scrollHeight;
+  }
+};
 
 let lastValue = "";
 input.addEventListener("input", () => {
   const cur = input.value;
+
   if (cur.length > lastValue.length) {
     const added = cur.slice(lastValue.length);
     Module.ccall("on_text_input", null, ["string"], [added]);
   } else if (cur.length < lastValue.length) {
-    Module.ccall("on_backspace", null, [], []);
+    const diff = lastValue.length - cur.length;
+    for (let i = 0; i < diff; i++) {
+      Module.ccall("on_backspace", null, [], []);
+    }
   }
   lastValue = cur;
 });
 
-     Module.setStatus('Downloading...');
-     window.onerror = function(msg,url,line,col){
-       Module.setStatus('Exception thrwon, see JS console');
-       var element = document.getElementById('output');
-       if (element){
-         element.value += '[ERR]'+msg+"@"+line+":"+col+"\n";
-         element.scrollTop = element.scrollHeight;
-       }
-       console.error(msg);
-      };
-       Module.keyboardListeningElement = document.getElementById("canvas");
-
-Module.ccall("on_text_input", null, ["string"], [addedText]);
-Module.ccall("on_backspace", null, [], []);
-
-    </script>
+window.onerror = function(msg, url, line, col) {
+  output.value += `[ERR] ${msg}@${line}:${col}\n`;
+  output.scrollTop = output.scrollHeight;
+};
+</script>
     <script async type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
