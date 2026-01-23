@@ -39,27 +39,26 @@
     <hr/>
     <textarea class="emscripten" id="output" rows="8"></textarea>
     <hr>
-    <script type='text/javascript'>
-      
-    const canvas = document.getElementById("canvas");
-
+    
+    <script type='text/javascript'>    
+   const canvas = document.getElementById("canvas");
    const input = document.getElementById("textInput");
 
-if (canvas) {
-  canvas.addEventListener("mousedown", () => {
-    input.focus();
-  });
-}
+  if (canvas) {
+    canvas.addEventListener("mousedown", () => {
+      input.focus();
+    });
+  }
       
-      if (input){
-         input.focus();
-      }
-      window.addEventListener("load", () => {
-        input.focus();
-      });
-      //document.getElementById("canvas").addEventListener("mousedown", () => {
-      //  input.focus();
-      //});
+    if (input){
+       input.focus();
+    }
+    window.addEventListener("load", () => {
+      input.focus();
+    });
+    //document.getElementById("canvas").addEventListener("mousedown", () => {
+    //  input.focus();
+    //});
 
 
       var Module = {
@@ -117,7 +116,9 @@ input.addEventListener("input", () => {
         Module.ccall("on_text_input", null, ["string"], [added]);
     }
   } else if (cur.length < lastValue.length) {
-    Module.ccall("on_backspace", null, [], []);
+    if(Module.ccall){
+      Module.ccall("on_backspace", null, [], []);
+    }
   }
   lastValue = cur;
 });
@@ -145,6 +146,7 @@ input.addEventListener("input", () => {
      <script type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
