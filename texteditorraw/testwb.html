@@ -41,22 +41,25 @@
     <hr>
     <script type='text/javascript'>
       
-const canvas = document.getElementById("canvas");
+    const canvas = document.getElementById("canvas");
+
+   const input = document.getElementById("textInput");
+
 if (canvas) {
   canvas.addEventListener("mousedown", () => {
     input.focus();
   });
 }
-      const input = document.getElementById("textInput");
+      
       if (input){
          input.focus();
       }
       window.addEventListener("load", () => {
         input.focus();
       });
-      document.getElementById("canvas").addEventListener("mousedown", () => {
-        input.focus();
-      });
+      //document.getElementById("canvas").addEventListener("mousedown", () => {
+      //  input.focus();
+      //});
 
 
       var Module = {
@@ -138,6 +141,7 @@ input.addEventListener("input", () => {
     <script async type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
