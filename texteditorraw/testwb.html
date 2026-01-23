@@ -114,7 +114,7 @@
       }; //var Module
 
 
-if(input){
+
 let lastValue = "";
 input.addEventListener("input", () => {
   const cur = input.value;
@@ -127,7 +127,7 @@ input.addEventListener("input", () => {
     if(Module.ccall){
       Module.ccall("on_backspace", null, [], []);
     }
-  }
+  
   lastValue = cur;
 });
 }
@@ -155,6 +155,7 @@ input.addEventListener("input", () => {
      <script type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
