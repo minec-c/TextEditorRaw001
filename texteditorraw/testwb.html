@@ -107,22 +107,25 @@ if (canvas) {
       }; //var Module
 
 
-
+if(input){
 let lastValue = "";
 input.addEventListener("input", () => {
   const cur = input.value;
   if (cur.length > lastValue.length) {
     const added = cur.slice(lastValue.length);
-    Module.ccall("on_text_input", null, ["string"], [added]);
+    if(Module.ccall){
+        Module.ccall("on_text_input", null, ["string"], [added]);
+    }
   } else if (cur.length < lastValue.length) {
     Module.ccall("on_backspace", null, [], []);
   }
   lastValue = cur;
 });
+}
 
       Module.setStatus('Downloading...');
     window.onerror = function(msg,url,line,col){
-       Module.setStatus('Exception thrwon, see JS console');
+       Module.setStatus('Exception thrown, see JS console');
        var element = document.getElementById('output');
        if (element){
          element.value += '[ERR]'+msg+"@"+line+":"+col+"\n";
@@ -139,8 +142,10 @@ input.addEventListener("input", () => {
 
     </script>
     <script async type="text/javascript" src="testwb17.js"></script>
+     <script type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
