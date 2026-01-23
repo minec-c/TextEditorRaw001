@@ -40,9 +40,17 @@
     <textarea class="emscripten" id="output" rows="8"></textarea>
     <hr>
     <script type='text/javascript'>
-
+      
+const canvas = document.getElementById("canvas");
+if (canvas) {
+  canvas.addEventListener("mousedown", () => {
+    input.focus();
+  });
+}
       const input = document.getElementById("textInput");
-      input.focus();
+      if (input){
+         input.focus();
+      }
       window.addEventListener("load", () => {
         input.focus();
       });
@@ -130,6 +138,7 @@ input.addEventListener("input", () => {
     <script async type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
