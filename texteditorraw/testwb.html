@@ -59,7 +59,9 @@
           if (element) element.value = ''; // clear browser cache
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            if (typeof console !== "undefined" && console.log) {
             console.log(text);
+            }
             if (element) {
               element.value += text + "\n";
               element.scrollTop = element.scrollHeight; // focus on bottom
@@ -113,7 +115,9 @@ input.addEventListener("input", () => {
          element.value += '[ERR]'+msg+"@"+line+":"+col+"\n";
          element.scrollTop = element.scrollHeight;
        }
-       console.error(msg);
+       if (typeof console !== "undefined" && console.error) {
+         console.error(msg);
+       }
       };
        Module.keyboardListeningElement = document.getElementById("canvas");
 
@@ -124,5 +128,6 @@ input.addEventListener("input", () => {
     <script async type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
