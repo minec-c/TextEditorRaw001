@@ -20,6 +20,9 @@
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
     <input id="textInput"
       type="text"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
       style="width:90%; font-size:18px;"
       placeholder="Type here (Android)">
     </div>
@@ -89,10 +92,24 @@
         }
       }; //var Module
 //document.getElementById("textInput").addEventListener("input", function(e) {
-input.addEventListener("input", function(e){
-  Module.ccall('set_text', null, ['string'], [e.target.value]);
+      
+//input.addEventListener("input", function(e){
+//  Module.ccall('set_text', null, ['string'], [e.target.value]);
+//});
+
+let lastValue = "";
+input.addEventListener("input", () => {
+  const cur = input.value;
+  if (cur.length > lastValue.length) {
+    const added = cur.slice(lastValue.length);
+    Module.ccall("on_text_input", null, ["string"], [added]);
+  } else if (cur.length < lastValue.length) {
+    Module.ccall("on_backspace", null, [], []);
+  }
+  lastValue = cur;
 });
-      Module.setStatus('Downloading...');
+      
+     Module.setStatus('Downloading...');
      window.onerror = function(msg,url,line,col){
        Module.setStatus('Exception thrwon, see JS console');
        var element = document.getElementById('output');
@@ -102,6 +119,7 @@ input.addEventListener("input", function(e){
        }
        console.error(msg);
       };
+       Module.keyboardListeningElement = document.getElementById("canvas");
       //Module.keyboardListeningElement = document.getElementById("textInput");
       //Explicitly disabling library's keyboard capture on web:
       //Module.keyboardListeningElement = null; 
@@ -109,6 +127,7 @@ input.addEventListener("input", function(e){
     <script async type="text/javascript" src="testwb16.js"></script>
   </body>
 </html>
+
 
 
 
