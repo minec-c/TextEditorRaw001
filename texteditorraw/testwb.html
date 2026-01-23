@@ -22,7 +22,7 @@
     <div class="emscripten">
     </div>
     <div class="emscripten_border">
-      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
     <input id="textInput"
       type="text"
       autocomplete="off"
@@ -64,14 +64,22 @@
       var Module = {
         preRun: [],
         postRun: [],
+        canvas:(function(){
+          return document.getElementById("canvas");
+        })(),
+        keyboardListeningElement: (function () {
+          return document.getElementById("canvas");
+        })(),
         print: (function() {
           var element = document.getElementById('output');
           if (element) element.value = ''; // clear browser cache
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            
             if (typeof console !== "undefined" && console.log) {
             console.log(text);
             }
+            
             if (element) {
               element.value += text + "\n";
               element.scrollTop = element.scrollHeight; // focus on bottom
@@ -136,7 +144,8 @@ input.addEventListener("input", () => {
          console.error(msg);
        }
     };
-       Module.keyboardListeningElement = document.getElementById("canvas");
+      
+// Module.keyboardListeningElement = document.getElementById("canvas");
 
 //Module.ccall("on_text_input", null, ["string"], [addedText]);
 //Module.ccall("on_backspace", null, [], []);
@@ -146,6 +155,7 @@ input.addEventListener("input", () => {
      <script type="text/javascript" src="testwb17.js"></script>
   </body>
 </html>
+
 
 
 
